@@ -20,8 +20,10 @@ gameDisplay = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Marathoner!!!!!')
 
 #Importing the images
-img = pygame.image.load('charrun100.png')
-cloud = pygame.image.load('cloud_4.png')
+img_big = pygame.image.load('charrun.png')
+img = pygame.transform.scale(img_big, [100, 100])
+
+cloud = pygame.image.load('cloud.png')
 
 
 clock = pygame.time.Clock()
@@ -135,10 +137,50 @@ class Clouds(threading.Thread):
                 pygame.display.update()
                 pygame.draw.rect(gameDisplay, light_blue, [0, 0, 800, 300])
                 pygame.display.update()
-            
+
+def Jump():
+    global y_value_char
+    y_value_char = 400
+    print("Jump")
+    gameDisplay.blit(img, [100, y_value_char])
+    pygame.display.update()
+    time.sleep(0.25)
+
+    pygame.draw.rect(gameDisplay, light_blue, [100, y_value_char, 100, 100])
+    pygame.display.update()
+    time.sleep(0.25)
+
+    y_value_char = 200
+    
+    gameDisplay.blit(img, [100, y_value_char])
+    pygame.display.update()
+    time.sleep(0.25)
+
+    pygame.draw.rect(gameDisplay, light_blue, [100, y_value_char, 100, 100])
+    pygame.display.update()
+    time.sleep(0.25)
+
+    y_value_char = 400
+    
+    gameDisplay.blit(img, [100, y_value_char])
+    pygame.display.update()
+    time.sleep(0.25)
+
+class ButtonPress(threading.Thread):
+    def run(self):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    Jump()
+
+
 def gameLoop():
+    global gameOver
     gameOver = False
+    
     print("game loop")
+    global y_value_char
+    global x_value
 
                             
     gameDisplay.fill(light_blue)
@@ -150,25 +192,50 @@ def gameLoop():
 
 
 
-    while gameOver == False:   
+    while gameOver == False:
+        
+        
+            
         clouds = Clouds()
+        #key_check = ButtonPress()
 
         clouds.start()
+        #key_check.start()
+
+        
+        
         x_value = 730
+
+        for i in range(30):
+            x_value -= 30
+            if x_value < 100:
+                #gameOver = True
+                pass
     
-        hurdle = pygame.image.load('charrun100.png').convert()
-        for u in range(15):
-            hurdle.move(-15, 0)
-            """
-            pygame.display.update()
             pygame.draw.rect(gameDisplay, red, [x_value, 450, 50, 50])
             pygame.display.update()
-            print("hurdle")
-            pygame.display.update()
+            time.sleep(0.025)
             pygame.draw.rect(gameDisplay, light_blue, [x_value, 450, 50, 50])
             pygame.display.update()
-            """
-            
+            #time.sleep(0.025)
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    Jump()
+
+    gameDisplay.fill(white)
+    print("Game Over")
+    message_to_screen("Game Over",
+                        green,
+                        -100,
+                        size="medium")
+
+        
+        
+         
+        
+    
 
     
 
